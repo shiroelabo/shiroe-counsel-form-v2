@@ -65,14 +65,14 @@ with st.form(key="counseling_form"):
         "清潔感がある", "若々しく見える", "自身に溢れて信頼感がある", "垢抜けている",
         "健康的な印象"
     ]
-    st.markdown("なりたい印象（複数選択）")
+    st.markdown("なりたい印象（複数選択可）")
     selected_impressions = [opt for opt in impression_options if st.checkbox(opt, key=opt)]
 
     motive_options = [
         "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨き",
         "SNSなどで気になった", "なんとなく整えたい"
     ]
-    st.markdown("ご来店の目的・背景（複数選択）")
+    st.markdown("ご来店の目的・背景（複数選択可）")
     selected_motives = [opt for opt in motive_options if st.checkbox(opt, key=opt+"motive")]
 
     tooth_state_options = [
@@ -86,7 +86,7 @@ with st.form(key="counseling_form"):
         "初めて", "歯科ホワイトニング", "セルフホワイトニング（サロン）",
         "ホームホワイトニング（歯科キット）", "市販ホワイトニング（歯磨き粉・シート等）"
     ]
-    st.markdown("これまでのホワイトニング経験（複数選択）")
+    st.markdown("これまでのホワイトニング経験（複数選択可）")
     selected_history = [opt for opt in history_options if st.checkbox(opt, key=opt+"hist")]
 
     style_options = [
