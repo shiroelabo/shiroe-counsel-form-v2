@@ -7,7 +7,7 @@ from streamlit_drawable_canvas import st_canvas
 st.set_page_config(page_title="SHIROE LABO カウンセリングシート", layout="centered")
 
 # ロゴとタイトル
-st.image("logo.png", width=300, use_container_width=True)
+st.image("logo.png", width=300)
 st.markdown("## カウンセリングシート")
 
 def lookup_address(zipcode):
@@ -19,6 +19,14 @@ def lookup_address(zipcode):
                 result = data["results"][0]
                 return f"{result['address1']}{result['address2']}{result['address3']}"
     return ""
+
+# セッションステートで住所保存
+if "address" not in st.session_state:
+    st.session_state.address = ""
+
+zipcode = st.text_input("郵便番号（ハイフンなし）", max_chars=7)
+if len(zipcode) == 7 and zipcode.isdigit():
+    st.session_state.address = lookup_address(zipcode)
 
 with st.form(key="counseling_form"):
     st.subheader("■ 基本情報")
@@ -54,79 +62,43 @@ with st.form(key="counseling_form"):
     except:
         st.warning("正しい生年月日を選択してください。")
 
-    zipcode = st.text_input("郵便番号（ハイフンなし）")
-    address_default = lookup_address(zipcode)
-    address = st.text_input("住所", value=address_default)
+    address = st.text_input("住所", value=st.session_state.address)
     phone = st.text_input("電話番号")
 
     st.subheader("■ 印象・目的について")
 
-    impression_options = [
-        "清潔感がある", "若々しく見える", "自身に溢れて信頼感がある", "垢抜けている",
+    impressions = st.multiselect("**なりたい印象（複数選択可）**", [
+        "清潔感がある", "若々しく見える", "自信に溢れて信頼感がある", "垢抜けている",
         "健康的な印象"
-    ]
-    st.markdown("なりたい印象（複数選択可）")
-    selected_impressions = [opt for opt in impression_options if st.checkbox(opt, key=opt)]
+    ])
 
-    motive_options = [
-        "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨き",
-        "SNSなどで気になった", "なんとなく整えたい"
-    ]
-    st.markdown("ご来店の目的・背景（複数選択可）")
-    selected_motives = [opt for opt in motive_options if st.checkbox(opt, key=opt+"motive")]
+    motive = st.multiselect("**ご来店の目的・背景（複数選択可）**", [
+        "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨き", "SNSなどで気になった"
+    ])
 
-    tooth_state_options = [
+    tooth_state = st.multiselect("**現在の歯の状態（複数選択可）**", [
         "少し黄ばみが気になる", "人と比べて気になる",
         "鏡や写真で気になる", "笑う時に気になる"
-    ]
-    st.markdown("現在の歯の状態（複数選択可）")
-    selected_tooth_states = [opt for opt in tooth_state_options if st.checkbox(opt, key=opt+"tooth")]
+    ])
 
-    history_options = [
+    history = st.multiselect("**これまでのホワイトニング経験（複数選択可）**", [
         "初めて", "歯科ホワイトニング", "セルフホワイトニング（サロン）",
         "ホームホワイトニング（歯科キット）", "市販ホワイトニング（歯磨き粉・シート等）"
-    ]
-    st.markdown("これまでのホワイトニング経験（複数選択可）")
-    selected_history = [opt for opt in history_options if st.checkbox(opt, key=opt+"hist")]
+    ])
 
-    style_options = [
+    style = st.multiselect("**理想の通い方（複数選択可）**", [
         "週1〜2回で集中して通いたい",
         "月2回くらいのペースで通いたい",
         "不定期でも気になったときに通いたい",
         "一度白くしたら、その後は維持として通いたい"
-    ]
-    st.markdown("理想の通い方（複数選択可）")
-    selected_style = [opt for opt in style_options if st.checkbox(opt, key=opt+"style")]
+    ])
 
-    concerns = st.markdown("**その他、気になること・不安など**")
-    concerns = st.text_area("")
+    concerns = st.text_area("**その他、気になること・不安など**")
 
     st.subheader("■ 同意事項")
     with st.expander("▼ ご確認ください（クリックで表示）", expanded=False):
         st.markdown("""
-
-●個人情報の使用について  
-当店ではお客様の個人情報をお聞きしておりますが、これらの情報は、ご利用者様の確認・照会にのみ使用しております。  
-法律に基づき開示が義務づけられている等の特別な事情がない限り、お客様ご本人の事前の許可なく第三者に個人情報を提供いたしません。  
-住所・ご登録内容に変更がありました場合はご連絡ください。
-
-●施術後の仕上がりには個人差があり、色斑や斑点、縞模様が出ることがあります。  
-●医療機関で治療を受けている方やお痛みのある方、以下の項目に当てはまる方はご使用をお控えください。  
-　1. 顎関節症の方  
-　2. アレルギー体質の方  
-　3. 光過敏症の方  
-●妊娠中の方は、施術を受ける前にかかりつけ医にご確認ください。施術中・施術後のいかなる不測の事態についても当店では責任を負いかねます。  
-●使用中に痛みや異常を感じた際には直ちに中止してください。中断した場合の返金はできません。  
-●マウスオープナー使用により唇や口周辺に鬱血や乾燥などの症状が出る場合があります。  
-●唾液が溜まりやすいため、施術中や起き上がる際はご注意ください。  
-●差し歯・入れ歯・詰め物・被せ物などは材質により効果が出ないことがあります。  
-●神経を抜いた歯や遺伝・色素沈着など内部に原因がある歯は白くなりにくい場合があります。  
-●フッ素症の症状がある場合は症状が出る可能性があります。  
-●歯の構造により、白点や白線が目立つことがあります。  
-●液剤塗布後、光照射が正しく当たるようご注意ください。  
-●ご利用中に生じた事故・盗難・紛失について、当店の重大な過失がない限り責任を負いかねます。  
-●施術後の返金は一切お受けできません。
-  
+●施術後の仕上がりには個人差があります。  
 ●医療機関で治療中の方は医師へ確認の上で施術を行ってください。  
 ●施術後の返金には応じかねます。
         """)
@@ -147,7 +119,10 @@ with st.form(key="counseling_form"):
         key="canvas"
     )
 
-    submit_btn = st.form_submit_button("送信", type="primary", disabled=not agree)
+    if agree:
+        submit_btn = st.form_submit_button("送信", type="primary")
+    else:
+        submit_btn = st.form_submit_button("送信", disabled=True)
 
     if submit_btn and agree:
         st.success("回答を受け付けました（※保存処理は後で接続）")
