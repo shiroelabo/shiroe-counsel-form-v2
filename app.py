@@ -99,6 +99,7 @@ with st.form(key="counseling_form"):
     selected_style = [opt for opt in style_options if st.checkbox(opt, key=opt+"style")]
 
     concerns = st.markdown("**その他、気になること・不安など**")
+    st.markdown("**その他、気になること・不安など**")
     concerns = st.text_area("")
 
     st.subheader("■ 同意事項")
@@ -147,10 +148,7 @@ with st.form(key="counseling_form"):
         key="canvas"
     )
 
-    if agree:
-        submit_btn = st.form_submit_button("送信", type="primary")
-    else:
-        submit_btn = st.form_submit_button("送信")
+    submit_btn = st.form_submit_button("送信", type="primary", disabled=not agree)
 
     if submit_btn and agree:
         st.success("回答を受け付けました（※保存処理は後で接続）")
