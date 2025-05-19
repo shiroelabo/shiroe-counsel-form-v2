@@ -7,7 +7,7 @@ from streamlit_drawable_canvas import st_canvas
 st.set_page_config(page_title="SHIROE LABO カウンセリングシート", layout="centered")
 
 # ロゴとタイトル
-st.image("logo.png", width=300)
+st.image("logo.png", width=300, use_column_width=False)
 st.markdown("## カウンセリングシート")
 
 def lookup_address(zipcode):
@@ -98,7 +98,8 @@ with st.form(key="counseling_form"):
     st.markdown("理想の通い方（複数選択可）")
     selected_style = [opt for opt in style_options if st.checkbox(opt, key=opt+"style")]
 
-    concerns = st.text_area("その他、気になること・不安など")
+    concerns = st.markdown("**その他、気になること・不安など**")
+    concerns = st.text_area("")
 
     st.subheader("■ 同意事項")
     with st.expander("▼ ご確認ください（クリックで表示）", expanded=False):
