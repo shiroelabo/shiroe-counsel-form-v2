@@ -1,4 +1,3 @@
-
 import streamlit as st
 import requests
 from datetime import datetime
@@ -7,7 +6,7 @@ from streamlit_drawable_canvas import st_canvas
 st.set_page_config(page_title="SHIROE LABO カウンセリングシート", layout="centered")
 
 # ロゴとタイトル
-st.image("logo.png", width=300)
+st.image("logo.png", width=300, use_column_width=False)
 st.markdown("## カウンセリングシート")
 
 def lookup_address(zipcode):
@@ -19,14 +18,6 @@ def lookup_address(zipcode):
                 result = data["results"][0]
                 return f"{result['address1']}{result['address2']}{result['address3']}"
     return ""
-
-# セッションステートで住所保存
-if "address" not in st.session_state:
-    st.session_state.address = ""
-
-zipcode = st.text_input("郵便番号（ハイフンなし）", max_chars=7)
-if len(zipcode) == 7 and zipcode.isdigit():
-    st.session_state.address = lookup_address(zipcode)
 
 with st.form(key="counseling_form"):
     st.subheader("■ 基本情報")
@@ -62,45 +53,61 @@ with st.form(key="counseling_form"):
     except:
         st.warning("正しい生年月日を選択してください。")
 
-    address = st.text_input("住所", value=st.session_state.address)
+    zipcode = st.text_input("郵便番号（ハイフンなし）")
+    address_default = lookup_address(zipcode)
+    address = st.text_input("住所", value=address_default)
     phone = st.text_input("電話番号")
 
     st.subheader("■ 印象・目的について")
 
-    impressions = st.multiselect("**なりたい印象（複数選択可）**", [
+    st.markdown("**なりたい印象（複数選択可）**")
+    impressions = st.multiselect("", [
         "清潔感がある", "若々しく見える", "自信に溢れて信頼感がある", "垢抜けている",
         "健康的な印象"
     ])
 
-    motive = st.multiselect("**ご来店の目的・背景（複数選択可）**", [
+    st.markdown("**ご来店の目的・背景（複数選択可）**")
+    motive = st.multiselect("", [
         "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨き", "SNSなどで気になった"
     ])
 
-    tooth_state = st.multiselect("**現在の歯の状態（複数選択可）**", [
-        "少し黄ばみが気になる", "人と比べて気になる",
-        "鏡や写真で気になる", "笑う時に気になる"
+    st.markdown("**現在の歯の状態（複数選択可）**")
+    tooth_state = st.multiselect("", [
+        "少し黄ばみが気になる", "人と比べて気になる", "鏡や写真で気になる", "笑う時に気になる"
     ])
 
-    history = st.multiselect("**これまでのホワイトニング経験（複数選択可）**", [
+    st.markdown("**これまでのホワイトニング経験（複数選択可）**")
+    history = st.multiselect("", [
         "初めて", "歯科ホワイトニング", "セルフホワイトニング（サロン）",
         "ホームホワイトニング（歯科キット）", "市販ホワイトニング（歯磨き粉・シート等）"
     ])
 
-    style = st.multiselect("**理想の通い方（複数選択可）**", [
-        "週1〜2回で集中して通いたい",
-        "月2回くらいのペースで通いたい",
-        "不定期でも気になったときに通いたい",
-        "一度白くしたら、その後は維持として通いたい"
+    st.markdown("**理想の通い方（複数選択可）**")
+    style = st.multiselect("", [
+        "週1〜2回で集中して通いたい", "月2回くらいのペースで通いたい",
+        "不定期でも気になったときに通いたい", "一度白くしたら、その後は維持として通いたい"
     ])
 
-    concerns = st.text_area("**その他、気になること・不安など**")
+    st.markdown("**その他、気になること・不安など**")
+    concerns = st.text_area("")
 
     st.subheader("■ 同意事項")
     with st.expander("▼ ご確認ください（クリックで表示）", expanded=False):
-        st.markdown("""
-●施術後の仕上がりには個人差があります。  
-●医療機関で治療中の方は医師へ確認の上で施術を行ってください。  
-●施術後の返金には応じかねます。
+        st.markdown(""" 
+●個人情報の使用について
+当店ではお客様の個人情報をお聞きしておりますが、これらの情報は、ご利用者様の確認・照会にのみ使用しております。
+法律に基づき開示が義務づけられている等の特別な事情がない限り、お客様ご本人の事前の許可なく第三者に個人情報を提供いたしません。
+住所・ご登録内容に変更がありました場合はご連絡ください。
+
+●施術後の仕上がりには個人差があり、色斑や斑点、縞模様が出ることがあります。
+●医療機関で治療を受けている方やお痛みのある方、下記に当てはまる方はご使用をお控えください。
+1、顎関節症の方
+2、アレルギー体質の方
+3、光過敏症の方
+●妊娠中の方は、施術を受けることを予めかかりつけの医師に確認の上、施術を行うことを原則とします。
+●使用中に痛みや異常を感じた際には直ちに使用を中止してください。
+●マウスオープナーを使用した照射後に唇および口の周辺に鬱血・乾燥が出ることがあります。
+●効果には個人差があります。詰め物や被せ物、神経を抜いた歯、遺伝的な変色などには効果がない場合があります。
         """)
 
     agree = st.checkbox("上記注意事項をすべて確認し、同意しました。")
@@ -119,16 +126,11 @@ with st.form(key="counseling_form"):
         key="canvas"
     )
 
-    if agree:
-        submit_btn = st.form_submit_button("送信", type="primary")
-    else:
-        submit_btn = st.form_submit_button("送信", disabled=True)
+    submit_btn = st.form_submit_button("送信", type="primary", disabled=not agree)
 
-    if submit_btn and agree:
+    if submit_btn:
         st.success("回答を受け付けました（※保存処理は後で接続）")
         if canvas_result.image_data is not None:
             st.image(canvas_result.image_data, caption="署名画像（プレビュー）")
         else:
             st.warning("署名が見つかりません。もう一度お試しください。")
-    elif submit_btn and not agree:
-        st.error("注意事項への同意が必要です。")
