@@ -7,7 +7,7 @@ from streamlit_drawable_canvas import st_canvas
 st.set_page_config(page_title="SHIROE LABO カウンセリングシート", layout="centered")
 
 # ロゴとタイトル
-st.image("logo.png", width=300, use_column_width=False)
+st.image("logo.png", width=300, use_container_width=True)
 st.markdown("## カウンセリングシート")
 
 def lookup_address(zipcode):
