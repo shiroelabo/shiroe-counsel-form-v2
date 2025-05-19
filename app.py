@@ -62,15 +62,15 @@ with st.form(key="counseling_form"):
     st.subheader("■ 印象・目的について")
 
     impression_options = [
-        "清潔感がある", "若々しく見える", "自信がありそう", "垢抜けている",
-        "健康的な印象", "信頼感", "話しかけやすい", "透明感がある"
+        "清潔感がある", "若々しく見える", "自身に溢れて信頼感がある", "垢抜けている",
+        "健康的な印象"
     ]
     st.markdown("なりたい印象（複数選択）")
     selected_impressions = [opt for opt in impression_options if st.checkbox(opt, key=opt)]
 
     motive_options = [
-        "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨きの一環として",
-        "SNSなどで気になった", "久々に人と会う予定", "なんとなく整えたい"
+        "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨き",
+        "SNSなどで気になった", "なんとなく整えたい"
     ]
     st.markdown("ご来店の目的・背景（複数選択）")
     selected_motives = [opt for opt in motive_options if st.checkbox(opt, key=opt+"motive")]
