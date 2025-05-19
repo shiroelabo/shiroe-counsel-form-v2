@@ -61,32 +61,42 @@ with st.form(key="counseling_form"):
 
     st.subheader("■ 印象・目的について")
 
-    impressions = st.multiselect("なりたい印象（複数選択）", [
+    impression_options = [
         "清潔感がある", "若々しく見える", "自信がありそう", "垢抜けている",
         "健康的な印象", "信頼感", "話しかけやすい", "透明感がある"
-    ])
+    ]
+    st.markdown("なりたい印象（複数選択）")
+    selected_impressions = [opt for opt in impression_options if st.checkbox(opt, key=opt)]
 
-    motive = st.multiselect("ご来店の目的・背景（複数選択）", [
+    motive_options = [
         "仕事・面接に向けて", "恋愛・婚活", "大切な予定のため", "自分磨きの一環として",
         "SNSなどで気になった", "久々に人と会う予定", "なんとなく整えたい"
-    ])
+    ]
+    st.markdown("ご来店の目的・背景（複数選択）")
+    selected_motives = [opt for opt in motive_options if st.checkbox(opt, key=opt+"motive")]
 
-    tooth_state = st.multiselect("現在の歯の状態（複数選択可）", [
+    tooth_state_options = [
         "少し黄ばみが気になる", "人と比べて気になる",
         "鏡や写真で気になる", "笑う時に気になる"
-    ])
+    ]
+    st.markdown("現在の歯の状態（複数選択可）")
+    selected_tooth_states = [opt for opt in tooth_state_options if st.checkbox(opt, key=opt+"tooth")]
 
-    history = st.multiselect("これまでのホワイトニング経験（複数選択）", [
+    history_options = [
         "初めて", "歯科ホワイトニング", "セルフホワイトニング（サロン）",
         "ホームホワイトニング（歯科キット）", "市販ホワイトニング（歯磨き粉・シート等）"
-    ])
+    ]
+    st.markdown("これまでのホワイトニング経験（複数選択）")
+    selected_history = [opt for opt in history_options if st.checkbox(opt, key=opt+"hist")]
 
-    style = st.multiselect("理想の通い方（複数選択可）", [
+    style_options = [
         "週1〜2回で集中して通いたい",
         "月2回くらいのペースで通いたい",
         "不定期でも気になったときに通いたい",
         "一度白くしたら、その後は維持として通いたい"
-    ])
+    ]
+    st.markdown("理想の通い方（複数選択可）")
+    selected_style = [opt for opt in style_options if st.checkbox(opt, key=opt+"style")]
 
     concerns = st.text_area("その他、気になること・不安など")
 
