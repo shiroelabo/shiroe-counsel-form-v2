@@ -99,7 +99,7 @@ with st.form(key="counseling_form"):
     selected_style = [opt for opt in style_options if st.checkbox(opt, key=opt+"style")]
 
     concerns = st.markdown("**その他、気になること・不安など**")
-    concerns = st.text_area("")
+    concerns = st.text_area("")")
 
     st.subheader("■ 同意事項")
     with st.expander("▼ ご確認ください（クリックで表示）", expanded=False):
